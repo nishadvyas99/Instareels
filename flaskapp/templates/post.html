@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 {% block content %}
+    <div id="post-container">
     <div class="card article">
         <div class="card-header">
             <img  class="account-img rounded-circle" src="{{ get_file_url('profile_pics/' + post.author.image_file) }}">
@@ -7,9 +8,13 @@
         </div>
 
         {% if post.media %}
-            <div class="main-img-wrapper bg-light">
+            <video class="card-img-top post-media rounded-0" controls>
+                <source src="{{ get_file_url('media/' + post.media) }}" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <!-- <div class="main-img-wrapper bg-light">
                 <img src="{{ get_file_url('media/' + post.media) }}" class="card-img-top post-media rounded-0" alt="">
-            </div>
+            </div> -->
         {% endif %}
         <div class="card-body pb-2">
             <div class="card-text post-meta-data">
@@ -62,4 +67,6 @@
             {% endif %}
         </ul>
     </div>
+    </div>
+
 {% endblock content %}

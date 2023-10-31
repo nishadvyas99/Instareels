@@ -170,7 +170,7 @@ textarea.caption-box { overflow: hidden; }
 
 #flw {
     margin-top: 1.9rem;
-    margin-left:;
+    margin-left: 1.9rem; /*edit*/
 }
 
 .user-info {

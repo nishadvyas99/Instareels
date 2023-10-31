@@ -35,7 +35,7 @@
         {% for post in posts %}
             <div class="col p-2 img-wrapper rounded">
                 {% if post.media %}
-                    <a href="{{ url_for('get_post', post_id=post.pid) }}"><img class="post-img" src="{{ get_file_url('media/mid' + post.media) }}">
+                    <a href="{{ url_for('get_post', post_id=post.pid) }}"><img class="post-img" src="{{ get_file_url('media/' + post.media) }}">
                         </a>
                 {% endif %}
             </div>

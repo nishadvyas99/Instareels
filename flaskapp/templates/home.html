@@ -25,7 +25,8 @@
         function load_posts(start) {
             // init a new request
             const req = new XMLHttpRequest();
-            req.open('POST', $SCRIPT_ROOT + '/')
+            req.open('POST', $SCRIPT_ROOT + '/');
+            //req.open('POST', $SCRIPT_ROOT + '/')
 
             // callback function when data is loaded
             req.onload = () => {
@@ -61,8 +62,25 @@
 
             // Send request
             req.send(param);
-        };
-    
+        //};
+        }
+
+        // Duplicate posts to create a looping effect
+        function loopPosts() {
+            const postContainer = document.querySelector('.special');
+            const postsContainerWidth = postContainer.scrollWidth;
+            const windowWidth = window.innerWidth;
+            let totalWidth = 0;
+
+            while (totalWidth < windowWidth) {
+                posts.forEach(post => {
+                    const content = template(post);
+                    postContainer.insertAdjacentHTML('beforeend', content);
+                    totalWidth += postContainer.lastElementChild.offsetWidth;
+                });
+            }
+        }
+
     </script>
 
 {% endblock content %}
@@ -89,7 +107,7 @@
                 
             </li>
         {% else %}
-            <small class="text-muted">You've followed everyone! Enjoy asshole.</small>
+            <small class="text-muted">You've followed everyone!.</small>
         {% endfor %}
     </ul>
     </div>

@@ -3,21 +3,22 @@ from flask import render_template, redirect, url_for, flash, request, jsonify
 from flaskapp.forms import RegistrationForm, LoginForm, PostForm, AccountUpdateForm, CommentPostForm
 from flaskapp.models import User, Post, Comment, Notif
 from flask_login import login_user, current_user, logout_user, login_required
-from flaskapp.utils import save_picture, save_media, get_file_url, delete_file
-
+from flaskapp.utils import save_picture, save_media,save_video, get_file_url, delete_file
+import logging
+logging.basicConfig(level=logging.INFO)
 
 @app.route("/", methods=['GET', 'POST'])
 def home():
     if request.method == 'GET':
         if not current_user.is_authenticated:
             return redirect(url_for('register'))
-        return render_template("home.html", title="Instaclone", get_file_url=get_file_url)
+        return render_template("home.html", title="Instareels", get_file_url=get_file_url)
 
 
     if request.method == 'POST':
         start = int(request.form.get('start') or 1)
         # get posts
-        posts = current_user.get_followed_posts().paginate(start, 2, False).items
+        posts = current_user.get_followed_posts().paginate(start, 1, False).items
 
         result = []
         for post in posts:
@@ -114,13 +115,13 @@ def logout():
 def new_post():
     form = PostForm()
     if form.validate_on_submit():
-        media = save_media(form.media.data, 'media')
+        media = save_video(form.media.data)
         post = Post(content=form.content.data, media=media, author=current_user)
         db.session.add(post)
         db.session.commit()
         flash("Posted successfully", 'success')
         return redirect(url_for('home'))
-    return render_template("new_post.html", title="Instaclone", form=form, get_file_url=get_file_url)
+    return render_template("new_post.html", title="Instareels", form=form, get_file_url=get_file_url)
 
 
 
@@ -138,7 +139,7 @@ def get_post(post_id):
     # post_id = request.args.get('post_id')
     post = Post.query.get_or_404(int(post_id))
 
-    return render_template("post.html", title="Instaclone", post=post, get_file_url=get_file_url)
+    return render_template("post.html", title="Instareels", post=post, get_file_url=get_file_url)
 
 
 
@@ -184,16 +185,18 @@ def account():
 @app.route("/follow", methods=['GET', 'POST'])
 @login_required
 def follow_user():
+    print("The code is here")
     # user_id = int(request.args.get('id'))
     if request.method == 'GET':
         username = request.args.get('username')
+        print(username)
     else:
         username = request.form['username']
-    print(username)
+        print(username)
     user = User.query.filter_by(username=username).first()
     current_user.follow(user)
     db.session.commit()
-    # flash(f"You are now following {username}", 'success')
+    #flash(f"You are now following {username}", 'success')
 
     return jsonify(result=username + " followed")
     # return redirect(url_for('get_user', username=user.username))
@@ -203,6 +206,7 @@ def follow_user():
 @app.route("/unfollow", methods=['POST'])
 @login_required
 def unfollow_user():
+    print("The code is here")
     # user_id = int(request.args.get('id'))
     username = request.form['username']
     user = User.query.filter_by(username=username).first()

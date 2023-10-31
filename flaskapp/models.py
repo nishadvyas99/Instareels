@@ -35,7 +35,6 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(20), unique=True, nullable=False)
     password = db.Column(db.String(32), nullable=False)
     image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
-    
     posts = db.relationship('Post', backref='author', lazy=True)
     comments = db.relationship('Comment', backref='author', lazy=True)  
 

@@ -105,7 +105,10 @@ $(document).ready(function() {
     $('.make-comment').on('keyup', enable_disable_button);
 
     // follow user
-    $("#flw").click(function() {
+    $("#flw").click(function(e) {
+        console.log("flw-sug clicked"); // Add this line
+        e.preventDefault();
+
         var t = $("#flw").text();
         if(t == "Follow") {
             $.post($SCRIPT_ROOT + "/follow", 
@@ -136,6 +139,7 @@ $(document).ready(function() {
 
     // follow suggs users
     $(".flw-sug").click(function(e) {
+        console.log("flw-sug clicked"); // Add this line
         e.preventDefault();
 
         let user_id = $(this).attr('id').split('-')[1];
@@ -206,9 +210,11 @@ function template(post) {
                 <a class="text-dark user-link" href="${post.author.user_url}">${post.author.username}</a>
             </div>
     
-                <div class="main-img-wrapper bg-light">
-                    <img src="${post.media}" class="card-img-top post-media rounded-0" alt="">
-                </div>
+                <video class="card-img-top post-media rounded-0" controls>
+                    <source src="${post.media}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+
 
             <div class="card-body pb-2">
                 <div class="card-text post-meta-data">

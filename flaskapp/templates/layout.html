@@ -28,14 +28,14 @@
     {% if title %}
         <title>{{ title }}</title>
     {% else %}
-        <title>Instaclone</title>
+        <title>Instareels</title>
     {% endif %}
 </head>
 <body>
     <header class="site-header">
         <nav class="navbar navbar-expand-md navbar-light border-bottom fixed-top">
           <div class="container">
-            <a class="navbar-brand mr-4" href="/">Instaclone</a>
+            <a class="navbar-brand mr-4" href="/">Instareels</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon"></span>
             </button>
@@ -48,8 +48,8 @@
                   <a class="nav-item nav-link nav-icons" title="Home" href="{{ url_for('home') }}">
                     <i class="fa fa-home" aria-hidden="true"></i>
                   </a>
-                  <a class="nav-item nav-link nav-icons" title="Explore" href="{{ url_for('explore') }}">
-                    <i class="fa fa-compass" aria-hidden="true"></i>
+                  <!-- <a class="nav-item nav-link nav-icons" title="Explore" href="{{ url_for('explore') }}">
+                    <i class="fa fa-compass" aria-hidden="true"></i> -->
                   </a>
                   <a class="nav-item nav-link nav-icons" title="New Post" href="{{ url_for('new_post') }}">
                     <i class="far fa-edit"></i>
@@ -57,12 +57,12 @@
                   <a class="nav-item nav-link nav-icons" title="Account" href="{{ url_for('account') }}">
                     <i class="far fa-user-circle"></i>
                   </a>
-                  <li class="nav-item dropdown">
+                  <!-- <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle nav-icons" href="#"  title="Notifications" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                       {% if current_user.new_notif() %}<span class="text-danger">* </span>{% endif %}
                       <i class="fa fa-bell-o"></i>
-                    </a>
-                    <div class="dropdown-menu notif" aria-labelledby="navbarDropdown">
+                    </a> -->
+                    <!-- <div class="dropdown-menu notif" aria-labelledby="navbarDropdown">
                       {% if current_user.new_notif() %}
                         {% for notif in current_user.get_notifs() %}
                           <a class="dropdown-item bg-light" href="{{url_for('get_post', post_id=notif.post_id)}}">
@@ -81,7 +81,7 @@
                       {% else %} 
                       <small class="text-muted" style="margin-left:7px;">No new notifications</small>
                       {% endfor %}
-                    </div>
+                    </div> -->
                   </li>
                   <a class="nav-item nav-link nav-icons" title="Logout" href="{{ url_for('logout') }}">
                     <i class="fa fa-sign-out"></i>

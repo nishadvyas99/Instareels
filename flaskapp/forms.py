@@ -26,7 +26,7 @@ class RegistrationForm(FlaskForm):
     def validate_username(self, username):
         user = User.query.filter_by(username=username.data).first()
         if user:
-            raise ValidationError("Username is already take.")
+            raise ValidationError("Username is already taken.")
 
 
 
@@ -46,8 +46,10 @@ class LoginForm(FlaskForm):
 
 class PostForm(FlaskForm):
     content = TextAreaField(label='Content')
-    media = FileField(label='Upload pic', validators=[
-        FileAllowed(('jpeg', 'jpg', 'png'))
+    media = FileField(label='Upload Video', validators=[
+        #FileAllowed(('jpeg', 'jpg', 'png'))
+        FileAllowed(('mp4', 'avi', 'mov'))
+
     ])
     submit = SubmitField(label='Post')
 

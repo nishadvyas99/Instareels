@@ -1,15 +1,14 @@
 import os
 import secrets
 from PIL import Image
+from flask import url_for
 from flaskapp import app
 import boto3
-from flaskapp.config import S3_BUCKET, S3_BUCKET_LOC, S3_ACCESS_KEY, S3_SECRET_KEY
 
 OUT_SIZE = {'pfp': (125, 125), 'media': (200, 200)}
 
 
 def save_picture(picture, pic_type):# open s3 instance
-    s3 = boto3.resource('s3', aws_access_key_id=S3_ACCESS_KEY, aws_secret_access_key=S3_SECRET_KEY)
 
     random_hex = secrets.token_hex(8)
     _, f_ext = os.path.splitext(picture.filename)
@@ -21,16 +20,24 @@ def save_picture(picture, pic_type):# open s3 instance
     i.thumbnail(OUT_SIZE[pic_type])
     i.save(pic_path)
 
-    s3.meta.client.upload_file(pic_path, S3_BUCKET, 'profile_pics/' + pic_fname, ExtraArgs={'ACL': 'public-read', 'ContentType': 'image/' + f_ext[1:]})
 
     # return filename
     return pic_fname
 
 
-def save_media(picture, pic_type):
-    # open s3 instance
-    s3 = boto3.resource('s3', aws_access_key_id=S3_ACCESS_KEY, aws_secret_access_key=S3_SECRET_KEY)
+def save_video(video_file):
+    random_hex = secrets.token_hex(10)
+    _, f_ext = os.path.splitext(video_file.filename)
+    media_fname = random_hex + f_ext
+    media_path = os.path.join(app.root_path, 'static/media/', media_fname)
 
+    # Save the video file
+    video_file.save(media_path)
+
+    return media_fname
+
+def save_media(picture, pic_type):
+    
     random_hex = secrets.token_hex(10)
     _, f_ext = os.path.splitext(picture.filename)
     pic_fname = random_hex + f_ext
@@ -44,8 +51,6 @@ def save_media(picture, pic_type):
     i = i.resize((bwidth, height), Image.ANTIALIAS)
     i.save(pic_path)
 
-    s3.meta.client.upload_file(pic_path, S3_BUCKET, 'media/' + pic_fname, ExtraArgs={'ACL': 'public-read', 'ContentType': 'image/' + f_ext[1:]})
-
     # save thumb now
     j = Image.open(picture)
 
@@ -56,7 +61,6 @@ def save_media(picture, pic_type):
     thumb_path = os.path.join(app.root_path, 'static/media/', 'thumb' + pic_fname)
     j.save(thumb_path)
 
-    s3.meta.client.upload_file(thumb_path, S3_BUCKET, 'media/thumb' + pic_fname, ExtraArgs={'ACL': 'public-read', 'ContentType': 'image/' + f_ext[1:]})
     # save display image for explore and user page
     k = Image.open(picture)
 
@@ -67,18 +71,16 @@ def save_media(picture, pic_type):
     mid_path = os.path.join(app.root_path, 'static/media/', 'mid' + pic_fname)
     k.save(mid_path)
 
-    s3.meta.client.upload_file(mid_path, S3_BUCKET, 'media/mid' + pic_fname, ExtraArgs={'ACL': 'public-read', 'ContentType': 'image/' + f_ext[1:]})
-
     # return filename
     return pic_fname
 
 
 def get_file_url(f_path):
-    url = f'https://{S3_BUCKET}.s3.{S3_BUCKET_LOC}.amazonaws.com/{f_path}'
-    return url
+    return url_for('static', filename=f_path)
 
 
 def delete_file(f_path):
-    s3 = boto3.client('s3', aws_access_key_id=S3_ACCESS_KEY, aws_secret_access_key=S3_SECRET_KEY)
     for item in ['media/', 'media/mid', 'media/thumb']:
-        s3.delete_object(Bucket=S3_BUCKET, Key=item + f_path)
+        local_path = os.path.join('https://',app.root_path, 'static/media/', item, f_path)
+        if os.path.exists(local_path):
+            os.remove(local_path)
