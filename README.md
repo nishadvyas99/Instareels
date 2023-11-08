@@ -9,7 +9,7 @@ Instagram reels build with python and flask
 - Like/unlike posts
 - Follow/unfollow users
 - Feed consists of posts from users you follow 
-- Change profile pic and username
+- Change profile picture and username
 - Suggestions to follow users
 
 ## Running Locally
@@ -20,8 +20,12 @@ Follow these instructions to get this project up and running on your machine.
 ```
 pip install -r requirements.txt
 activate your virtual enviorment
-Enter 'flask run' in your terminal
+export enviornment variables and runn application from your terminal:
+export FLASK_APP=main
+export FLASK_ENV=development
+flask run
 ```
 
-
-Set ```debug=1``` on main.py
+The 2 users already in the database are:
+1. username: nishad , password: 123456
+2. username: nishaddd , password: 123456

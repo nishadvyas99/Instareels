@@ -98,85 +98,82 @@ function delete_comment(e) {
 
 $(document).ready(function() {
 
-    document.querySelector('.share').onclick = link_share;
+    //document.querySelector('.share').onclick = link_share;
 
     $('.post-comment').attr("disabled", true);
 
     $('.make-comment').on('keyup', enable_disable_button);
 
     // follow user
-    $("#flw").click(function(e) {
-        console.log("flw-sug clicked"); // Add this line
+    $(document).on('click', '.flw-button', function(e) {
+        console.log("flw-button clicked"); // Add this line
         e.preventDefault();
 
-        var t = $("#flw").text();
+        var t = $(this).text();
         if(t == "Follow") {
-            $.post($SCRIPT_ROOT + "/follow", 
-            { 
-                username: $("#user").text() 
-            }, 
-            function(data, success) {
+            $.post($SCRIPT_ROOT + "/follow/" + $("#user").text(), function(data, success) {
                 // alert(data.result + " status: " + success);
-                $("#flw").text('Following');
-                $("#flw").removeClass('btn-primary');
-                $("#flw").addClass('btn-secondary');
+                $(this).text('Following');
+                $(this).removeClass('btn-primary');
+                $(this).addClass('btn-secondary');
+                //$.post($SCRIPT_ROOT + data)
+                window.location.href = $SCRIPT_ROOT + "/user/" + $("#user").text();
             });
         }
         else if(t == "Following") {
-            $.post($SCRIPT_ROOT + "/unfollow", 
-            { 
-                username: $("#user").text() 
-            }, 
-            function(data, success) {
+            $.post($SCRIPT_ROOT + "/unfollow/" + $("#user").text(), function(data, success) {
+                console.log("AJAX request successful"); // Add this line 
                 // alert(data.result + " status: " + success);
-                $("#flw").text('Follow');
-                $("#flw").removeClass('btn-secondary');
-                $("#flw").addClass('btn-primary');
+                $(this).text('Follow');
+                $(this).removeClass('btn-secondary');
+                $(this).addClass('btn-primary');
+                //$.post($SCRIPT_ROOT + data)
+                window.location.href = $SCRIPT_ROOT + "/user/" + $("#user").text();
             });
         }
     }); 
 
 
     // follow suggs users
-    $(".flw-sug").click(function(e) {
-        console.log("flw-sug clicked"); // Add this line
-        e.preventDefault();
+    // $(".flw-sug").click(function(e) {
+    //     console.log("flw-sug clicked"); // Add this line
+    //     e.preventDefault();
 
-        let user_id = $(this).attr('id').split('-')[1];
-        let follows_or_not = $(this).text();
-        let username = $("#flw-"+user_id).text().trim();
+    //     let user_id = $(this).attr('id').split('-')[1];
+    //     let follows_or_not = $(this).text();
+    //     let username = $("#flw-"+user_id).text().trim();
 
-        console.log(username);
-        console.log(follows_or_not);
+    //     console.log(username);
+    //     console.log(follows_or_not);
 
-        if(follows_or_not == 'Follow') {
-            // alert('to follow');
-            $.post($SCRIPT_ROOT + "/follow",
-            { 
-                username: username
-            },
-            function(data, success) {
-                // alert(data.result + " status: " + success);
-                $('#s-'+user_id).text('Following');
-                $('#s-'+user_id).removeClass('text-primary');
-                $('#s-'+user_id).addClass('text-secondary');
-            });
-        }
-        else if(follows_or_not == 'Following') {
-            // alert('to follow');
-            $.post($SCRIPT_ROOT + "/unfollow",
-            { 
-                username: username
-            },
-            function(data, success) {
-                // alert(data.result + " status: " + success);
-                $('#s-'+user_id).text('Follow');
-                $('#s-'+user_id).removeClass('text-secondary');
-                $('#s-'+user_id).addClass('text-primary');
-            });
-        }
+    //     if(follows_or_not == 'Follow') {
+    //         // alert('to follow');
+    //         $.post($SCRIPT_ROOT + "/follow",
+    //         { 
+    //             username: username
+    //         },
+    //         function(data, success) {
+    //             // alert(data.result + " status: " + success);
+    //             $('#s-'+user_id).text('Following');
+    //             $('#s-'+user_id).removeClass('text-primary');
+    //             $('#s-'+user_id).addClass('text-secondary');
+    //         });
+    //     }
+    //     else if(follows_or_not == 'Following') {
+    //         // alert('to follow');
+    //         $.post($SCRIPT_ROOT + "/unfollow",
+    //         { 
+    //             username: username
+    //         },
+    //         function(data, success) {
+    //             // alert(data.result + " status: " + success);
+    //             $('#s-'+user_id).text('Follow');
+    //             $('#s-'+user_id).removeClass('text-secondary');
+    //             $('#s-'+user_id).addClass('text-primary');
+    //         });
+    //     }
 
-    });
+    // });
 
 
     $("textarea").val('');

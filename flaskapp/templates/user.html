@@ -20,9 +20,9 @@
                     <div class="">
                         <small class="">
                                 {% if current_user.is_following(user) %}
-                                    <button class="btn btn-secondary" id="flw">Following</button>
+                                    <button class="btn btn-secondary flw-button" id="flw-following">Following</button>
                                 {% elif user != current_user %}
-                                    <button class="btn btn-primary" id="flw">Follow</button>
+                                    <button class="btn btn-primary flw-button" id="flw-unfollow">Follow</button>
                                 {% endif %}
                         </small>
                     </div>

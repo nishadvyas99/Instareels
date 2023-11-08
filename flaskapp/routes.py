@@ -18,7 +18,7 @@ def home():
     if request.method == 'POST':
         start = int(request.form.get('start') or 1)
         # get posts
-        posts = current_user.get_followed_posts().paginate(start, 1, False).items
+        posts = current_user.get_followed_posts().paginate(start, 2, False).items
 
         result = []
         for post in posts:
@@ -182,40 +182,57 @@ def account():
 
 
 
-@app.route("/follow", methods=['GET', 'POST'])
+@app.route("/follow/<username>", methods=['GET', 'POST'])
 @login_required
-def follow_user():
+def follow_user(username):
     print("The code is here")
     # user_id = int(request.args.get('id'))
-    if request.method == 'GET':
-        username = request.args.get('username')
-        print(username)
-    else:
-        username = request.form['username']
-        print(username)
+    # if request.method == 'GET':
+    #     username = request.args.get('username')
+    #     print(username)
+    # else:
+    #     username = request.form['username']
+    #     print(username)
     user = User.query.filter_by(username=username).first()
+    posts = user.posts
+    if not user:
+        return jsonify(error="User not found"), 404
+
+    if current_user.is_following(user):
+        return jsonify(result="You are already following this user")
+
     current_user.follow(user)
     db.session.commit()
-    #flash(f"You are now following {username}", 'success')
+    #return render_template("user.html", title=user.username, posts=posts, user=user, get_file_url=get_file_url)
 
-    return jsonify(result=username + " followed")
+    #flash(f"You are now following {username}", 'success')
+    return redirect(url_for('home'))
+    #return jsonify(result=username + " followed")
     # return redirect(url_for('get_user', username=user.username))
 
 
 
-@app.route("/unfollow", methods=['POST'])
+@app.route("/unfollow/<username>", methods=['POST'])
 @login_required
-def unfollow_user():
+def unfollow_user(username):
     print("The code is here")
     # user_id = int(request.args.get('id'))
-    username = request.form['username']
+    # username = request.form['username']
     user = User.query.filter_by(username=username).first()
+    posts = user.posts
+    if not user:
+        return jsonify(error="User not found"), 404
+
+    if not current_user.is_following(user):
+        return jsonify(result=f"You are not following {username}")
     current_user.unfollow(user)
     db.session.commit()
     print(username)
-    # flash(f"{username} unfollowed", 'success')
+    #return render_template("user.html", title=user.username, posts=posts, user=user, get_file_url=get_file_url)
 
-    return jsonify(result=username + " unfollowed")
+    # flash(f"{username} unfollowed", 'success')
+    return redirect(url_for('home'))
+    #return jsonify(result=username + " unfollowed")
     # return redirect(url_for('get_user', username=user.username))
 
 

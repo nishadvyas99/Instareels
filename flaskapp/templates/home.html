@@ -65,22 +65,6 @@
         //};
         }
 
-        // Duplicate posts to create a looping effect
-        function loopPosts() {
-            const postContainer = document.querySelector('.special');
-            const postsContainerWidth = postContainer.scrollWidth;
-            const windowWidth = window.innerWidth;
-            let totalWidth = 0;
-
-            while (totalWidth < windowWidth) {
-                posts.forEach(post => {
-                    const content = template(post);
-                    postContainer.insertAdjacentHTML('beforeend', content);
-                    totalWidth += postContainer.lastElementChild.offsetWidth;
-                });
-            }
-        }
-
     </script>
 
 {% endblock content %}
@@ -100,11 +84,11 @@
                     {{ user.username }}
                 </a>
                 {% if current_user.is_following(user) %}
-                    <a href="" class="mt-1 float-right flw-sug text-secondary" id="s-{{user.uid}}">Following</a>
+                    <a href="{{ url_for('unfollow_user', username=user.username) }}" class="mt-1 float-right flw-sug text-secondary" id="s-{{user.uid}}">Following</a>
                 {% elif user != current_user %}
-                    <a href="" class="mt-1 float-right flw-sug text-primary" id="s-{{user.uid}}">Follow</a>
+                    <a href="{{ url_for('follow_user', username=user.username) }}" class="mt-1 float-right flw-sug text-primary" id="s-{{user.uid}}">Follow</a>
                 {% endif %}
-                
+    
             </li>
         {% else %}
             <small class="text-muted">You've followed everyone!.</small>

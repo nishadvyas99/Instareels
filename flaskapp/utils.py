@@ -3,7 +3,6 @@ import secrets
 from PIL import Image
 from flask import url_for
 from flaskapp import app
-import boto3
 
 OUT_SIZE = {'pfp': (125, 125), 'media': (200, 200)}
 
