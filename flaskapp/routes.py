@@ -268,12 +268,28 @@ def make_comment(post_id):
             db.session.add(n)
 
         db.session.commit()
-
         return jsonify(username=current_user.username,
                     user_url=url_for('get_user', username=current_user.username),
                     content=content, cid=c.cid, date_posted=c.date_posted.strftime('%d-%m-%Y'))
 
 
+@app.route("/reply/<int:comment_id>", methods=['POST'])
+@login_required
+def post_reply(comment_id):
+    content = request.form.get('content')
+    if not content:
+        flash('Your reply cannot be empty.', 'error')
+
+    parent_comment = Comment.query.get_or_404(comment_id)
+
+    if parent_comment:
+        reply = Comment(content=content, author=current_user, post_id=parent_comment.post_id, parent_id=comment_id)
+        db.session.add(reply)
+        db.session.commit()
+
+        return redirect(url_for('get_post', post_id=parent_comment.post_id))
+    else:
+        flash('The comment you are replying to was not found.', 'error')
 
 @app.route("/comment/<int:com_id>/delete")
 @login_required

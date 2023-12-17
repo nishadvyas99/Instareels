@@ -151,7 +151,7 @@ class Post(db.Model):
     content = db.Column(db.Text, nullable=False)
     media = db.Column(db.String(32), nullable=True)
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.uid'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.uid', name='fk_post_user'))
 
     liked = db.relationship("User", secondary=likes)
     comments = db.relationship('Comment', backref='post', lazy=True)
@@ -203,9 +203,14 @@ class Comment(db.Model):
     post_id = db.Column(db.Integer, db.ForeignKey('posts.pid'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.uid'), nullable=False)
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    parent_id = db.Column(db.Integer, db.ForeignKey('comments.cid', name='fk_comment_parent_id'))
+
+    # Relationship to itself
+    replies = db.relationship('Comment', backref=db.backref('parent', remote_side=[cid]), lazy='dynamic')
 
     def __repr__(self):
         return f"Comment({self.post_id}, {self.user_id}, '{self.content}', '{self.date_posted}')"
+
 
 
 
@@ -213,8 +218,8 @@ class Notif(db.Model):
     __tablename__ = 'notifs'
     nid = db.Column(db.Integer, primary_key=True)
     msg = db.Column(db.Text, nullable=False)
-    post_id = db.Column(db.Integer, db.ForeignKey('posts.pid'), nullable=False)
-    for_uid = db.Column(db.Integer, db.ForeignKey('users.uid'), nullable=False)
+    post_id = db.Column(db.Integer, db.ForeignKey('posts.pid', name='fk_notif_post'))
+    for_uid = db.Column(db.Integer, db.ForeignKey('users.uid', name='fk_notif_for_user'))
     author = db.Column(db.String(20), nullable=False)
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
